@@ -1,0 +1,133 @@
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
+/**
+ * Lab 5 - Hash Maps
+ **/
+
+public class Main {
+
+    // ---------- Part I: Fundamental operations ----------
+    static void part1() {
+        HashMap<Integer, String> students = new HashMap<>();
+        students.put(101, "Alice");
+        students.put(102, "Bob");
+        students.put(103, "Charlie");
+        System.out.println("After insert : " + students);
+        System.out.println("get(101)     : " + students.get(101));
+        students.put(102, "Robert");
+        System.out.println("After update : " + students);
+        students.remove(103);
+        System.out.println("After remove : " + students);
+    }
+
+    // ---------- Part II: Frequency counting ----------
+    static HashMap<Integer, Integer> frequencyCount(int[] nums) {
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        }
+        return freq;
+    }
+
+    static void part2() {
+        int[] in = {1, 2, 2, 3, 1, 1, 4};
+        System.out.println("Input : " + Arrays.toString(in));
+        System.out.println("Output: " + frequencyCount(in));
+    }
+
+    // ---------- Part III: Duplicate detection ----------
+    static Integer firstDuplicate(int[] nums) {
+        HashSet<Integer> seen = new HashSet<>();
+        for (int num : nums) {
+            if (seen.contains(num)) return num;
+            seen.add(num);
+        }
+        return null;
+    }
+
+    static void part3() {
+        int[] a = {3, 1, 4, 2, 5, 3};
+        int[] b = {1, 2, 3, 4};
+        System.out.println(Arrays.toString(a) + " -> " + firstDuplicate(a));
+        System.out.println(Arrays.toString(b) + " -> " + firstDuplicate(b));
+    }
+
+    // ---------- Part IV: Two Sum ----------
+    static int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>(); // value -> index
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[]{map.get(complement), i};
+            }
+            map.put(nums[i], i);
+        }
+        return new int[]{};
+    }
+
+    static void part4() {
+        int[][] arrays = {{2, 7, 11, 15}, {3, 2, 4}, {3, 3}, {1, 2, 3}};
+        int[] targets = {9, 6, 6, 10};
+        for (int k = 0; k < arrays.length; k++) {
+            System.out.println("nums=" + Arrays.toString(arrays[k]) + ", target=" + targets[k]
+                    + " -> " + Arrays.toString(twoSum(arrays[k], targets[k])));
+        }
+    }
+
+    // ---------- Part V: Roman to Integer ----------
+    static int romanToInt(String s) {
+        HashMap<Character, Integer> values = new HashMap<>();
+        values.put('I', 1);
+        values.put('V', 5);
+        values.put('X', 10);
+        values.put('L', 50);
+        values.put('C', 100);
+        values.put('D', 500);
+        values.put('M', 1000);
+
+        int total = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int current = values.get(s.charAt(i));
+            if (i + 1 < s.length() && current < values.get(s.charAt(i + 1))) {
+                total -= current;
+            } else {
+                total += current;
+            }
+        }
+        return total;
+    }
+
+    static void part5() {
+        for (String t : new String[]{"III", "IV", "IX", "LVIII", "XC", "MCMXCIV"}) {
+            System.out.println(t + " -> " + romanToInt(t));
+        }
+    }
+
+    // ---------- Complexity analysis ----------
+    static void complexity() {
+        System.out.println(
+                "Two Sum\n" +
+                        "  Time : O(n) average - one pass, each containsKey/get/put is O(1) average\n" +
+                        "         (brute force would be O(n^2)).\n" +
+                        "  Space: O(n) - the map may hold up to n elements.\n\n" +
+                        "Roman to Integer\n" +
+                        "  Time : O(n) - each character is processed once with O(1) lookups.\n" +
+                        "  Space: O(1) - the map always holds exactly 7 symbols.");
+    }
+
+    // ---------- Runner ----------
+    static void section(String title) {
+        System.out.println("\n=== " + title + " ===");
+    }
+
+    public static void main(String[] args) {
+        section("Part I - Fundamental Operations");   part1();
+        section("Part II - Frequency Count");         part2();
+        section("Part III - First Duplicate");        part3();
+        section("Part IV - Two Sum");                 part4();
+        section("Part V - Roman to Integer");         part5();
+        section("Complexity Analysis");               complexity();
+    }
+}
